@@ -5,7 +5,7 @@
     <classes>
       <class name="AlmosaferWeb.MyTestCases">
         <methods>
-          <include name="CheckHotelTabsIsNotSelected"/>
+          <include name="SwitchToHotelTab"/>
           <include name="MySetup"/>
           <include name="myPostTest"/>
         </methods>

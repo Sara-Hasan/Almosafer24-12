@@ -2,6 +2,7 @@ package AlmosaferWeb;
 
 import static org.testng.Assert.assertEquals;
 
+import java.time.LocalDate;
 import java.util.Random;
 
 import org.openqa.selenium.By;
@@ -72,6 +73,28 @@ public class MyTestCases extends Parameters{
 		assertEquals(HotelTabs, "false");
 		
 	}
+	@Test(priority = 6 , enabled = false)
+	public void CheckDepatureDateAndReturnDate () {
+		
+		LocalDate today = LocalDate.now();
+		
+		int ExpectedDepatureDate = today.plusDays(1).getDayOfMonth();
+		int ExpectedReturnDate = today.plusDays(2).getDayOfMonth();
+		
+		
+//		System.out.println(ExpectedDepatureDate);
+//		System.out.println(ExpectedReturnDate);
+		
+		int ActualDepatureDate =Integer.parseInt(driver.findElement(By.cssSelector("div[class='sc-iHhHRJ sc-kqlzXE blwiEW'] span[class='sc-cPuPxo LiroG']")).getText());
+		
+		int ActualReturnDate =Integer.parseInt(driver.findElement(By.cssSelector("div[class='sc-iHhHRJ sc-OxbzP edzUwL'] span[class='sc-cPuPxo LiroG']")).getText());
+		
+//		System.out.println(ActualDepatureDate);
+//		System.out.println(ActualReturnDate);
+		
+		assertEquals(ActualDepatureDate, ExpectedDepatureDate);
+		assertEquals(ActualReturnDate, ExpectedReturnDate);
+	}
 	
 	@Test(priority = 7 )
 	public void RandomMethodToChangeTheLanaguage() {
@@ -90,6 +113,23 @@ public class MyTestCases extends Parameters{
 			String ActualLang = driver.findElement(By.tagName("html")).getAttribute("lang");
 			assertEquals(ActualLang, ExceptedLang);
 		}
+	}
+	
+	@Test(priority = 8)
+	public void SwitchToHotelTab() {
+		WebElement HotelTab = driver.findElement(By.id("uncontrolled-tab-example-tab-hotels"));
+		HotelTab.click();
+		
+		
+		 
+		 
+		 if(driver.getCurrentUrl().contains("ar")) {
+			 WebElement SearchCityInput = driver.findElement(By.cssSelector("input[placeholder='البحث عن فنادق أو وجهات']"));
+			 SearchCityInput.sendKeys(CitiesInArabic[randomArabicCity]);
+		 }else {
+			 WebElement SearchCityInput = driver.findElement(By.cssSelector("input[placeholder='Search for hotels or places']"));
+			 SearchCityInput.sendKeys(CitiesInEnglish[randomEnglishCity]);
+		 }
 	}
 	
 	@AfterTest

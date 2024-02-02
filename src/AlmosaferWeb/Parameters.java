@@ -11,10 +11,14 @@ public class Parameters {
 	
 	String Url = "https://www.almosafer.com/en";
 	
+	Random randForCity =new Random();
+	
 	String [] Website = {"https://www.almosafer.com/en","https://www.almosafer.com/ar"};
 	
+	String [] CitiesInEnglish = {"dubai", "jedda","riyadh"};
+	int randomEnglishCity = randForCity.nextInt(CitiesInEnglish.length);
 	
-	
-	
+	String [] CitiesInArabic = {"جدة", "دبي"};
+	int randomArabicCity = randForCity.nextInt(CitiesInArabic.length);
 	
 	}
