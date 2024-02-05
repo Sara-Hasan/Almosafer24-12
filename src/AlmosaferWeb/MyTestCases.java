@@ -3,10 +3,12 @@ package AlmosaferWeb;
 import static org.testng.Assert.assertEquals;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -115,13 +117,10 @@ public class MyTestCases extends Parameters{
 		}
 	}
 	
-	@Test(priority = 8)
+	@Test(priority = 8 ,enabled = false)
 	public void SwitchToHotelTab() {
 		WebElement HotelTab = driver.findElement(By.id("uncontrolled-tab-example-tab-hotels"));
 		HotelTab.click();
-		
-		
-		 
 		 
 		 if(driver.getCurrentUrl().contains("ar")) {
 			 WebElement SearchCityInput = driver.findElement(By.cssSelector("input[placeholder='البحث عن فنادق أو وجهات']"));
@@ -130,6 +129,99 @@ public class MyTestCases extends Parameters{
 			 WebElement SearchCityInput = driver.findElement(By.cssSelector("input[placeholder='Search for hotels or places']"));
 			 SearchCityInput.sendKeys(CitiesInEnglish[randomEnglishCity]);
 		 }
+		 
+		 WebElement theList = driver.findElement(By.className("UzzIN")); 
+			
+			System.out.println(theList.findElements(By.tagName("li")).size());
+			
+			theList.findElements(By.tagName("li")).get(1).click();
+//		 WebElement theList = driver.findElement(By.className("phbroq-4"));
+//		 
+//		 System.out.println(theList.findElements(By.tagName("li")).size());
+//		 theList.findElements(By.tagName("li")).get(1).click();
+		 
+	}
+	
+	
+	@Test(priority = 8)
+	public void switchToHotelTab() throws InterruptedException {
+
+		WebElement HotelTab = driver.findElement(By.id("uncontrolled-tab-example-tab-hotels"));
+		HotelTab.click();
+
+		if (driver.getCurrentUrl().contains("ar")) {
+			WebElement searchCityInput = driver
+					.findElement(By.cssSelector("input[placeholder='البحث عن فنادق أو وجهات']"));
+
+			searchCityInput.sendKeys(CitiesInArabic[randomArabicCity]);
+		} else {
+			WebElement SearchCityInput = driver
+					.findElement(By.cssSelector("input[placeholder='Search for hotels or places']"));
+
+			SearchCityInput.sendKeys(CitiesInEnglish[randomEnglishCity]);
+		}
+		Thread.sleep(7000);
+		WebElement theList = driver.findElement(By.className("UzzIN")); 
+//		Thread.sleep(3000);
+		
+		System.out.println(theList.findElements(By.tagName("li")).size());
+		
+		theList.findElements(By.tagName("li")).get(1).click();
+		
+	}
+	
+	@Test(priority = 9)
+	public void RandomlySelectTheVisitorNumber() {
+		WebElement Visitor = driver.findElement(By.className("tln3e3-1"));
+		Select selector = new Select(Visitor);
+		
+//		selector.selectByIndex(1);
+//		selector.selectByValue("B");
+		
+		if(driver.getCurrentUrl().contains("ar")) {
+			selector.selectByVisibleText("1 غرفة، 1 بالغ، 0 أطفال");
+		}else {
+			selector.selectByVisibleText("1 Room, 1 Adult, 0 Children");
+		}
+		driver.findElement(By.xpath("//*[@id=\"uncontrolled-tab-example-tabpane-hotels\"]/div/div[2]/div/div[4]/button")).click();
+	}
+	
+	@Test(priority = 10)
+	public void MakeSureIsPAgeFullyLoaded() throws InterruptedException {
+		Thread.sleep(10000);
+		String SearchResult = driver.findElement(By.xpath("//*[@id=\"__next\"]/div[2]/section/span")).getText();
+		if(driver.getCurrentUrl().contains("ar")) {
+			boolean ActualResult = SearchResult.contains("وجدنا");
+			assertEquals(ActualResult, true);
+		}else {
+			boolean ActualResult = SearchResult.contains("found");
+			assertEquals(ActualResult, true);
+		}
+		
+	}
+	@Test(priority = 11)
+	public void sortItemBasedOnThePrice() throws InterruptedException {
+		Thread.sleep(10000);
+		WebElement LowestPriceButton = driver
+				.findElement(By.xpath("//*[@id=\"__next\"]/div[2]/div[1]/div[2]/section[1]/div/button[2]"));
+
+		LowestPriceButton.click();
+		WebElement HotelsContainer = driver.findElement(By.cssSelector(".sc-htpNat.KtFsv.col-9"));
+
+		List<WebElement> thePricesList = HotelsContainer.findElements(By.className("Price__Value"));
+		
+		System.out.println(thePricesList.size() + "this is the total prices found ");
+		
+		String LowestPriceOnTheList = thePricesList.get(0).getText();
+		int LowestPriceOnTheListAsNumber = Integer.parseInt(LowestPriceOnTheList);
+
+		String HighestPriceOnTheList = thePricesList.get(thePricesList.size()-1).getText();
+		int HighestPriceOnTheListAsNumber = Integer.parseInt(HighestPriceOnTheList);
+		
+		System.out.println("this the minimum value " + LowestPriceOnTheList);
+		System.out.println("this the maximum value " + HighestPriceOnTheList);
+		
+		assertEquals( HighestPriceOnTheListAsNumber > LowestPriceOnTheListAsNumber, true);
 	}
 	
 	@AfterTest
